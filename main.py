@@ -35,9 +35,10 @@ def record_and_process_audio():
 def getGPTresp(text):
     def generate_response():
         load_dotenv()
-        typeWriter("The AI is Thinking", 1, outputlabel)
+        typeWriter("The AI is Thinking . . .", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
         messages = [{"role": "user", "content": text + "in no more than 50 words"}]
+        typeWriter("The AI is Thinking . . .", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
