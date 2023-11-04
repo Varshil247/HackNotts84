@@ -30,15 +30,15 @@ except Exception as ex:
     print(ex)
 
 #-------------------------------ai chat gpt---------------------------------------------------------#
-#load_dotenv()
-#openai.api_key = os.getenv('GPT')
+load_dotenv()
+openai.api_key = os.getenv('GPT')
 
-#completion = openai.ChatCompletion.create(
- #   model ="gpt-3.5-turbo",
-  #  message=[{"role": "user", "content": (text)}]
-#)
+completion = openai.ChatCompletion.create(
+   model ="gpt-3.5-turbo",
+   message=[{"role": "user", "content": format(text)}]
+)
 
-#print(completion.choices[0].message)
+print(completion.choices[0].message)
 
 #-------------------------------speak-----------------------------------------------------------------#
 
