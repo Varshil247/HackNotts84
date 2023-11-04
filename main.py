@@ -9,29 +9,26 @@ import tkinter as tk
 import threading
 
 def getAudio():
+    threading.Thread(target=record_and_process_audio, daemon=True).start()
+
+def record_and_process_audio():
     recognizer = sr.Recognizer()
-
-    ''' recording the sound '''
-
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
-            recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            recognizer.adjust_for_ambient_noise(source, duration=1)
             print("Recording ")
             recorded_audio = recognizer.listen(source)
-            # print("Done recording")
-
             print("Recognizing the text")
-            text = recognizer.recognize_google(
-                    recorded_audio, 
-                    language="en-US"
-                )
+            text = recognizer.recognize_google(recorded_audio, language="en-US")
             print("Decoded Text : {}".format(text))
-            if(format(text)!= ""):
+            if text:
                 getGPTresp(text)
-
     except sr.UnknownValueError:
         print("unknown error occurred")
+    except sr.RequestError as e:
+        print(f"Could not request results; {e}")
+
 
 def getGPTresp(text):
     def generate_response():
