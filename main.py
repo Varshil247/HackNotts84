@@ -6,6 +6,7 @@ import requests
 import pygame
 from io import BytesIO
 import tkinter as tk
+import threading
 
 def getAudio():
     recognizer = sr.Recognizer()
@@ -15,7 +16,7 @@ def getAudio():
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
-            recognizer.adjust_for_ambient_noise(source, duration=1)
+            recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
             recorded_audio = recognizer.listen(source)
             # print("Done recording")
@@ -31,37 +32,35 @@ def getAudio():
 
     except sr.UnknownValueError:
         print("unknown error occurred")
-#-------------------------------ai chat gpt---------------------------------------------------------#
+
 def getGPTresp(text):
-    messages = [
-        {"role": "user", "content": text}
-    ]
+    def generate_response():
+        load_dotenv()
+        openai.api_key = os.getenv('GPT')
+        messages = [{"role": "user", "content": text}]
+        try:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                max_tokens=50  # This limits the response length
+            )
+            response_text = completion.choices[0].message['content']
+            print(response_text)
+            makeAudio(response_text)
+        except Exception as e:
+            print(f"Error in getting response from GPT-3: {e}")
 
-    load_dotenv()
-    openai.api_key = os.getenv('GPT')
+    threading.Thread(target=generate_response, daemon=True).start()
 
-    completion = openai.ChatCompletion.create(
-    model ="gpt-3.5-turbo",
-    messages= messages
-    )
-
-    response_text = completion.choices[0].message['content']
-    print(response_text)
-    makeAudio(response_text)
-
-
-#-------------------------------speak-----------------------------------------------------------------#
-def  makeAudio(response_text):
+def makeAudio(response_text):
     url = "https://api.play.ht/api/v2/tts/stream"
-
     payload = {
-        "text": format(response_text),
+        "text": response_text,
         "voice": "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
         "output_format": "mp3",
         "voice_engine": "PlayHT2.0-turbo"
     }
     headers = {
-        #"accept": "text/event-stream",
         "accept": "audio/mpeg",
         "content-type": "application/json",
         "AUTHORIZATION": "22cf5809f001411e808c64bb6f8b5bec",
@@ -71,22 +70,14 @@ def  makeAudio(response_text):
     requests.head("https://api.play.ht/api/v2/tts")
 
     pygame.mixer.init()
-    response = requests.post(url, json=payload, headers=headers )
+    response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 200:
-        # Convert the response content to a bytes stream
         audio_data = BytesIO(response.content)
-
-        # Load the audio data into Pygame mixer
         pygame.mixer.music.load(audio_data)
-
-        # Play the audio
         pygame.mixer.music.play()
-
-        # Wait for the audio to finish (you can add other logic here)
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
-
     else:
         print('Failed to retrieve the audio file.')
 
