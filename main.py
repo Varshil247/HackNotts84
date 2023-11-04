@@ -3,9 +3,6 @@ import os
 import openai
 from dotenv import load_dotenv
 import pyttsx3
-import requests
-import pygame
-from io import BytesIO
 import tkinter as tk
 import threading
 
@@ -24,8 +21,11 @@ def record_and_process_audio():
             print("Recognizing the text")
             text = recognizer.recognize_google(recorded_audio, language="en-US")
             print("Decoded Text : {}".format(text))
+
             if text:
+                typeWriter(text, 1, inputlabel)
                 getGPTresp(text)
+
     except sr.UnknownValueError:
         print("unknown error occurred")
     except sr.RequestError as e:
@@ -45,16 +45,28 @@ def getGPTresp(text):
             )
             response_text = completion.choices[0].message['content']
             print(response_text)
+            typeWriter(response_text, 1, outputlabel)
             makeAudio(response_text)
         except Exception as e:
             print(f"Error in getting response from GPT-3: {e}")
+        
 
     threading.Thread(target=generate_response, daemon=True).start()
 
 def makeAudio(response_text):
-    engine.say(response_text)
-# play the speech
-    engine.runAndWait()
+    def audio():
+        # play the speech
+        engine.say(response_text)
+        engine.runAndWait()
+
+    threading.Thread(target=audio, daemon=True).start()
+
+
+def typeWriter(text, counter, label):
+    text=text.capitalize()
+    label.config(text=text[:counter])
+    if counter < len(text):
+        app.after(50, lambda: typeWriter(text, counter+1, label))
 
 
 # Create the main application window
@@ -66,14 +78,14 @@ app.geometry("300x500")
 inputFrame = tk.Frame(app)
 inputFrame.pack(expand=True, fill="both")
 
-inputlabel = tk.Label(inputFrame, text="Input", bg="#EAEFD3")
+inputlabel = tk.Label(inputFrame, text="User", bg="#EAEFD3")
 inputlabel.pack(expand=True, fill="both")
 
 #output
 outputFrame = tk.Frame(app)
 outputFrame.pack(expand=True, fill="both")
 
-outputlabel = tk.Label(outputFrame, text="Output", bg="#EAEFD3")
+outputlabel = tk.Label(outputFrame, text="ChatAI", bg="#EAEFD3")
 outputlabel.pack(expand=True, fill="both")
 
 #controls
