@@ -50,7 +50,7 @@ print(response_text)
 url = "https://api.play.ht/api/v2/tts/stream"
 
 payload = {
-    "text": format(text),
+    "text": format(response_text),
     "voice": "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
     "output_format": "mp3",
     "voice_engine": "PlayHT2.0-turbo"
