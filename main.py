@@ -15,7 +15,7 @@ def record_and_process_audio():
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
-            recognizer.adjust_for_ambient_noise(source, duration=1)
+            recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
@@ -35,13 +35,14 @@ def record_and_process_audio():
 def getGPTresp(text):
     def generate_response():
         load_dotenv()
+        typeWriter("The AI is Thinking", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
         messages = [{"role": "user", "content": text + "in no more than 50 words"}]
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                max_tokens=50  # This limits the response length
+                #max_tokens=50  # This limits the response length
             )
             response_text = completion.choices[0].message['content']
             print(response_text)
@@ -81,6 +82,10 @@ inputFrame.pack(expand=True, fill="both")
 inputlabel = tk.Label(inputFrame, text="User", bg="#EAEFD3")
 inputlabel.pack(expand=True, fill="both")
 
+textInput = tk.Entry(inputFrame, text="input", bg="#EAEFD3")
+textInput.insert(0, "Enter your question here")
+textInput.pack(expand=True, fill="both")
+
 #output
 outputFrame = tk.Frame(app)
 outputFrame.pack(expand=True, fill="both")
@@ -94,6 +99,9 @@ controlsFrame.pack(expand=True, fill="both")
 
 startButton = tk.Button(controlsFrame, text="Start", bg="#B3C0A4", command=getAudio)
 startButton.pack(expand=True, fill="both", side="left")
+
+arrowButton = tk.Button(controlsFrame, text=">", bg="#B3C0A4", command=lambda: getGPTresp(textInput.get()))
+arrowButton.pack(expand=True, fill="both", side="left")
 
 # stopButton = tk.Button(controlsFrame, text="Stop", bg="#505168")# , command=stopRec)
 # stopButton.pack(expand=True, fill="both", side="right")
