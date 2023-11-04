@@ -52,7 +52,6 @@ def getGPTresp(text):
     threading.Thread(target=generate_response, daemon=True).start()
 
 def makeAudio(response_text):
-    
     engine.say(response_text)
 # play the speech
     engine.runAndWait()
