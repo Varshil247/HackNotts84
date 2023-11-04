@@ -2,12 +2,14 @@ import speech_recognition as sr
 import os
 import openai
 from dotenv import load_dotenv
+import pyttsx3
 import requests
 import pygame
 from io import BytesIO
 import tkinter as tk
 import threading
 
+engine = pyttsx3.init()
 def getAudio():
     threading.Thread(target=record_and_process_audio, daemon=True).start()
 
@@ -34,7 +36,7 @@ def getGPTresp(text):
     def generate_response():
         load_dotenv()
         openai.api_key = os.getenv('GPT')
-        messages = [{"role": "user", "content": text}]
+        messages = [{"role": "user", "content": text + "in no more than 50 words"}]
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -50,34 +52,10 @@ def getGPTresp(text):
     threading.Thread(target=generate_response, daemon=True).start()
 
 def makeAudio(response_text):
-    url = "https://api.play.ht/api/v2/tts/stream"
-    payload = {
-        "text": response_text,
-        "voice": "s3://voice-cloning-zero-shot/d9ff78ba-d016-47f6-b0ef-dd630f59414e/female-cs/manifest.json",
-        "output_format": "mp3",
-        "voice_engine": "PlayHT2.0-turbo"
-    }
-    headers = {
-        "accept": "audio/mpeg",
-        "content-type": "application/json",
-        "AUTHORIZATION": "22cf5809f001411e808c64bb6f8b5bec",
-        "X-USER-ID": "8R48EcHJo3MMHiwT0F6Kp0ULVxq2"
-    }
-
-    requests.head("https://api.play.ht/api/v2/tts")
-
-    pygame.mixer.init()
-    response = requests.post(url, json=payload, headers=headers)
-
-    if response.status_code == 200:
-        audio_data = BytesIO(response.content)
-        pygame.mixer.music.load(audio_data)
-        pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
-            pygame.time.Clock().tick(10)
-    else:
-        print('Failed to retrieve the audio file.')
-
+    
+    engine.say(response_text)
+# play the speech
+    engine.runAndWait()
 
 
 # Create the main application window
