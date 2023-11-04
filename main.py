@@ -82,7 +82,7 @@ inputFrame.pack(expand=True, fill="both")
 inputlabel = tk.Label(inputFrame, text="User", bg="#EAEFD3")
 inputlabel.pack(expand=True, fill="both")
 
-textInput = tk.Entry(inputFrame, text="input", bg="#EAEFD3")
+textInput = tk.Entry(inputFrame, text="input", bg="#EAEFD1")
 textInput.insert(0, "Enter your question here")
 textInput.pack(expand=True, fill="both")
 
