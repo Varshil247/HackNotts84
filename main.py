@@ -46,8 +46,8 @@ def getGPTresp(text):
         load_dotenv()
         typeWriter("The AI is Thinking...", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
-        messages = conversation_history + [{"role": "user", "content": text}]
-        typeWriter("The AI is Thinking ...", 1, outputlabel)
+        messages = conversation_history + [{"role": "user", "content": text + "in no more than 50 words,Act like a human"}]
+        typeWriter("The AI is Thinking...", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -67,9 +67,9 @@ def getGPTresp(text):
 def makeAudio(response_text):
     def audio():
         engine.say(response_text)
+        
         engine.runAndWait()
     threading.Thread(target=audio, daemon=True).start()
-
 
 
 #-----------------------------------------------------------------------#
@@ -101,6 +101,7 @@ def resetText():
     global conversation_history
     inputlabel.configure(text="")
     outputlabel.configure(text="")
+    stopAudio()
     conversation_history = []
 
 
