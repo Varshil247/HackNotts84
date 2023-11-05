@@ -24,10 +24,10 @@ def record_and_process_audio():
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
-            typeWriter("Adjusting noise ", 1, inputlabel)
+            typeWriter("Recording ", 1, inputlabel)
             recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
-            typeWriter("Recording ", 1, inputlabel)
+            
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
             typeWriter("Recognizing the text", 1, inputlabel)
@@ -115,15 +115,15 @@ combobox.pack(padx=20, pady=10)
 label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
-#inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
-#inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
+inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
+inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 #textInput = customtkinter.CTkEntry(inputFrame)
 #textInput.insert(0, "Enter your question here")
 #textInput.pack(expand=True, fill="both")>
 
-inputlabel = customtkinter.CTkEntry(inputFrame, placeholder_text="Input...")
-inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
+textInput = customtkinter.CTkEntry(inputFrame, placeholder_text="Ask your question here..")
+textInput.pack(expand=True, fill="both", padx=10, pady=10)
 
 #output
 outputFrame = customtkinter.CTkFrame(mainFrame)
@@ -139,13 +139,13 @@ outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 controlsFrame = customtkinter.CTkFrame(mainFrame)
 controlsFrame.pack(padx=10, pady=10)
 
-microphone = customtkinter.CTkImage(Image.open(r"C:\Users\mohit\OneDrive\Desktop\prathu\py\HackNotts24\chatAI\microphone.png"))
+microphone = customtkinter.CTkImage(Image.open(r"C:\Users\psyp1\Desktop\hacknott\chatAI\microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
 startButton.configure(height=80, width=120)  # Make the microphone button larger
 startButton.pack(side="left", padx=5)
 
-arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(inputlabel.get()))
+arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
 arrowButton.configure(height=80, width=60)
 arrowButton.pack(side="left", padx=5)
 
