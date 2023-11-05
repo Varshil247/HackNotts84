@@ -4,22 +4,21 @@ import openai
 from dotenv import load_dotenv
 from tkinter import messagebox
 import pyttsx3
-import tkinter as tk
 import customtkinter
 import threading
-from PIL import Image,ImageTk
-
+from PIL import Image, ImageTk
 
 #-----------------------------------------------------------------------#
 # Backend
 
+# Global variable to maintain the conversation history
+conversation_history = []
 
 engine = pyttsx3.init()
 
 def getAudio():
     threading.Thread(target=record_and_process_audio, daemon=True).start()
    
-
 def record_and_process_audio():
     recognizer = sr.Recognizer()
     try:
@@ -28,7 +27,6 @@ def record_and_process_audio():
             typeWriter("Recording ", 1, inputlabel)
             recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
-            
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
             typeWriter("Recognizing the text", 1, inputlabel)
@@ -37,28 +35,28 @@ def record_and_process_audio():
             if text:
                 typeWriter(text, 1, inputlabel)
                 getGPTresp(text)
-
     except sr.UnknownValueError:
         print("unknown error occurred")
     except sr.RequestError as e:
         print(f"Could not request results; {e}")
 
-
 def getGPTresp(text):
     def generate_response():
+        global conversation_history
         load_dotenv()
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
-        messages = [{"role": "user", "content": text + "in no more than 50 words,Act like a human"}]
+        messages = conversation_history + [{"role": "user", "content": text}]
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                #max_tokens=50  # This limits the response length
             )
             response_text = completion.choices[0].message['content']
             print(f"ChatAI: {response_text}")
+            conversation_history.append({"role": "user", "content": text})
+            conversation_history.append({"role": "assistant", "content": response_text})
             typeWriter(response_text, 1, outputlabel)
             makeAudio(response_text)
         except Exception as e:
@@ -68,10 +66,8 @@ def getGPTresp(text):
 
 def makeAudio(response_text):
     def audio():
-        # play the speech
         engine.say(response_text)
         engine.runAndWait()
-
     threading.Thread(target=audio, daemon=True).start()
 
 
@@ -102,8 +98,10 @@ def show_info():
 
 
 def resetText():
+    global conversation_history
     inputlabel.configure(text="")
     outputlabel.configure(text="")
+    conversation_history = []
 
 
 app = customtkinter.CTk()
