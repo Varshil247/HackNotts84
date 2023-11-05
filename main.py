@@ -2,6 +2,7 @@ import speech_recognition as sr
 import os
 import openai
 from dotenv import load_dotenv
+from tkinter import messagebox
 import pyttsx3
 import tkinter as tk
 import customtkinter
@@ -92,6 +93,14 @@ def combobox_callback(choice):
     customtkinter.set_appearance_mode(choice)
     customtkinter.set_default_color_theme("green")
 
+def show_info():
+    info_text = ("ChatAI is a voice-enabled chat application that uses OpenAI's GPT-3 "
+                 "for conversational AI. Speak into your microphone or type in your query, "
+                 "and ChatAI will respond. This application showcases the capabilities "
+                 "of speech recognition and AI-powered conversational interfaces.")
+    messagebox.showinfo("About ChatAI", info_text)
+
+
 def resetText():
     inputlabel.configure(text="")
     outputlabel.configure(text="")
@@ -108,9 +117,17 @@ mainFrame.pack(expand=True, fill="both")
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("green")
 
-#input
+# Info Button Image
+info_icon = customtkinter.CTkImage(Image.open(r"info.png"))  # Ensure you have an 'info.png' image in the working directory
+
 inputFrame = customtkinter.CTkFrame(mainFrame)
 inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
+
+# Info Button
+infoButton = customtkinter.CTkButton(inputFrame, text="", image=info_icon, command=show_info, width=0, corner_radius=1000)
+infoButton.pack( side="right")
+
+#input
 
 combobox = customtkinter.CTkComboBox(master=app,values=["Dark","Light"], command=combobox_callback)
 combobox.pack(expand=False, fill="both",padx=5, pady=5)
@@ -157,6 +174,8 @@ microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
 startButton.pack(expand=True, fill="both", side="left", padx=5)
+
+
 
 reset = customtkinter.CTkImage(Image.open(r"reset.png"))
 
