@@ -67,9 +67,9 @@ def getGPTresp(text):
 def makeAudio(response_text):
     def audio():
         engine.say(response_text)
+        
         engine.runAndWait()
     threading.Thread(target=audio, daemon=True).start()
-
 
 
 #-----------------------------------------------------------------------#
@@ -101,6 +101,7 @@ def resetText():
     global conversation_history
     inputlabel.configure(text="")
     outputlabel.configure(text="")
+    stopAudio()
     conversation_history = []
 
 
