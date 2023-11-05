@@ -24,10 +24,13 @@ def record_and_process_audio():
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
+            typeWriter("Adjusting noise ", 1, inputlabel)
             recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
+            typeWriter("Recording ", 1, inputlabel)
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
+            typeWriter("Recognizing the text", 1, inputlabel)
             text = recognizer.recognize_google(recorded_audio, language="en-US")
             print(f"User: {text}")
             if text:
@@ -136,13 +139,13 @@ outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 controlsFrame = customtkinter.CTkFrame(mainFrame)
 controlsFrame.pack(padx=10, pady=10)
 
-microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
+microphone = customtkinter.CTkImage(Image.open(r"C:\Users\mohit\OneDrive\Desktop\prathu\py\HackNotts24\chatAI\microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
 startButton.configure(height=80, width=120)  # Make the microphone button larger
 startButton.pack(side="left", padx=5)
 
-arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
+arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(inputlabel.get()))
 arrowButton.configure(height=80, width=60)
 arrowButton.pack(side="left", padx=5)
 
