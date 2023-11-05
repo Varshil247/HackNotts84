@@ -85,31 +85,42 @@ def typeWriter(text, counter, label):
     if counter == len(text):
         label.configure(text_color="#6874E8")
 
-
-customtkinter.set_appearance_mode("light")
-customtkinter.set_default_color_theme("green")
+def combobox_callback(choice):
+    customtkinter.set_appearance_mode(choice)
+    customtkinter.set_default_color_theme("green")
 
 app = customtkinter.CTk()
 app.title("ChatAI")
 app.geometry("300x500")
 app.resizable(False, False)
 
+
 mainFrame = customtkinter.CTkFrame(app)
 mainFrame.pack(expand=True, fill="both")
+
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("green")
+
 
 #input
 inputFrame = customtkinter.CTkFrame(mainFrame)
 inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
+combobox = customtkinter.CTkComboBox(master=app,values=["dark","light"], command=combobox_callback)
+combobox.pack(padx=20, pady=10)
+
 label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
-inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
-inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
+#inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
+#inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
-textInput = tk.Entry(inputFrame, text="input", bg="#EAEFD1")
-textInput.insert(0, "Enter your question here")
-textInput.pack(expand=True, fill="both")
+#textInput = customtkinter.CTkEntry(inputFrame)
+#textInput.insert(0, "Enter your question here")
+#textInput.pack(expand=True, fill="both")>
+
+inputlabel = customtkinter.CTkEntry(inputFrame, placeholder_text="Input...")
+inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 #output
 outputFrame = customtkinter.CTkFrame(mainFrame)
@@ -128,12 +139,16 @@ controlsFrame.pack(padx=10, pady=10)
 microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
-startButton.pack(ipady=10)
+startButton.configure(height=80, width=120)  # Make the microphone button larger
+startButton.pack(side="left", padx=5)
 
-arrowButton = tk.Button(controlsFrame, text=">", bg="#B3C0A4", command=lambda: getGPTresp(textInput.get()))
-arrowButton.pack(expand=True, fill="both", side="left")
+arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
+arrowButton.configure(height=80, width=60)
+arrowButton.pack(side="left", padx=5)
 
-resetButton = tk.Button(controlsFrame, text="Reset", bg="#505168")# , command=stopRec)
-resetButton.pack(expand=True, fill="both", side="right")
+resetButton = customtkinter.CTkButton(controlsFrame, text="RESET")  # Use app.quit to properly exit the application
+resetButton.configure(height=80, width=60)
+resetButton.pack(side="right", padx=5)
+
 
 app.mainloop() 
