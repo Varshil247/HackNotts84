@@ -101,7 +101,6 @@ def resetText():
     global conversation_history
     inputlabel.configure(text="")
     outputlabel.configure(text="")
-    stopAudio()
     conversation_history = []
 
 
