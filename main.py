@@ -46,7 +46,7 @@ def getGPTresp(text):
         load_dotenv()
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
-        messages = conversation_history + [{"role": "user", "content": text}]
+        messages = conversation_history + [{"role": "user", "content": text + "in no more than 50 words,Act like a human"}]
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
