@@ -92,18 +92,21 @@ def combobox_callback(choice):
     customtkinter.set_appearance_mode(choice)
     customtkinter.set_default_color_theme("green")
 
+def resetText():
+    inputlabel.configure(text="")
+    outputlabel.configure(text="")
+
+
 app = customtkinter.CTk()
 app.title("ChatAI")
 app.geometry("300x500")
-app.resizable(False, False)
-
+app.resizable(False, True)
 
 mainFrame = customtkinter.CTkFrame(app)
 mainFrame.pack(expand=True, fill="both")
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("green")
-
 
 #input
 inputFrame = customtkinter.CTkFrame(mainFrame)
@@ -157,8 +160,7 @@ startButton.pack(expand=True, fill="both", side="left", padx=5)
 
 reset = customtkinter.CTkImage(Image.open(r"reset.png"))
 
-resetButton = customtkinter.CTkButton(controlsFrame, text="", image=reset)  # Use app.quit to properly exit the application
+resetButton = customtkinter.CTkButton(controlsFrame, text="", image=reset, command=resetText)  # Use app.quit to properly exit the application
 resetButton.pack(expand=True, fill="both", side="right", padx=5)
 
-
-app.mainloop() 
+app.mainloop()
