@@ -48,7 +48,7 @@ def getGPTresp(text):
         load_dotenv()
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
-        messages = [{"role": "user", "content": text + "in no more than 50 words"}]
+        messages = [{"role": "user", "content": text + "in no more than 50 words,Act like a human"}]
         typeWriter("The AI is Thinking . . .", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
@@ -110,20 +110,29 @@ inputFrame = customtkinter.CTkFrame(mainFrame)
 inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
 combobox = customtkinter.CTkComboBox(master=app,values=["dark","light"], command=combobox_callback)
-combobox.pack(padx=20, pady=10)
+combobox.pack(expand=False, fill="both",padx=5, pady=5)
 
 label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
 inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
-inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
+inputlabel.configure(height =20)
+inputlabel.pack(expand=True, fill="both", padx=10, pady=10,)
 
 #textInput = customtkinter.CTkEntry(inputFrame)
 #textInput.insert(0, "Enter your question here")
 #textInput.pack(expand=True, fill="both")>
 
-textInput = customtkinter.CTkEntry(inputFrame, placeholder_text="Ask your question here..")
-textInput.pack(expand=True, fill="both", padx=10, pady=10)
+textFrame = customtkinter.CTkFrame(mainFrame)
+textFrame.pack(expand=True, fill="both", padx=10, pady=10)
+
+textInput = customtkinter.CTkEntry(textFrame, placeholder_text="Ask your question here..")
+textInput.configure(width=200)
+textInput.pack(expand=True, fill="both",side="left", pady=5,padx=5)
+
+arrowButton = customtkinter.CTkButton(textFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
+#arrowButton.configure(height=50, width=20)
+arrowButton.pack( fill="y",side="right",pady=5,padx=5)
 
 #output
 outputFrame = customtkinter.CTkFrame(mainFrame)
@@ -139,15 +148,13 @@ outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 controlsFrame = customtkinter.CTkFrame(mainFrame)
 controlsFrame.pack(padx=10, pady=10)
 
-microphone = customtkinter.CTkImage(Image.open(r"C:\Users\psyp1\Desktop\hacknott\chatAI\microphone.png"))
+microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
 startButton.configure(height=80, width=120)  # Make the microphone button larger
 startButton.pack(side="left", padx=5)
 
-arrowButton = customtkinter.CTkButton(controlsFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
-arrowButton.configure(height=80, width=60)
-arrowButton.pack(side="left", padx=5)
+
 
 resetButton = customtkinter.CTkButton(controlsFrame, text="RESET")  # Use app.quit to properly exit the application
 resetButton.configure(height=80, width=60)
