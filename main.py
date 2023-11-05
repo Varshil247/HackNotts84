@@ -4,11 +4,20 @@ import openai
 from dotenv import load_dotenv
 import pyttsx3
 import tkinter as tk
+import customtkinter
 import threading
+from PIL import Image,ImageTk
+
+
+#-----------------------------------------------------------------------#
+# Backend
+
 
 engine = pyttsx3.init()
+
 def getAudio():
     threading.Thread(target=record_and_process_audio, daemon=True).start()
+   
 
 def record_and_process_audio():
     recognizer = sr.Recognizer()
@@ -20,8 +29,7 @@ def record_and_process_audio():
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
             text = recognizer.recognize_google(recorded_audio, language="en-US")
-            print("Decoded Text : {}".format(text))
-
+            print(f"User: {text}")
             if text:
                 typeWriter(text, 1, inputlabel)
                 getGPTresp(text)
@@ -44,13 +52,12 @@ def getGPTresp(text):
                 max_tokens=50  # This limits the response length
             )
             response_text = completion.choices[0].message['content']
-            print(response_text)
+            print(f"ChatAI: {response_text}")
             typeWriter(response_text, 1, outputlabel)
             makeAudio(response_text)
         except Exception as e:
             print(f"Error in getting response from GPT-3: {e}")
         
-
     threading.Thread(target=generate_response, daemon=True).start()
 
 def makeAudio(response_text):
@@ -62,43 +69,59 @@ def makeAudio(response_text):
     threading.Thread(target=audio, daemon=True).start()
 
 
+
+#-----------------------------------------------------------------------#
+# Frontend
+
+
 def typeWriter(text, counter, label):
     text=text.capitalize()
-    label.config(text=text[:counter])
+    label.configure(text=f"{text[:counter]}...")
+    label.configure(text_color="green")
     if counter < len(text):
         app.after(50, lambda: typeWriter(text, counter+1, label))
+    if counter == len(text):
+        label.configure(text_color="#6874E8")
 
 
-# Create the main application window
-app = tk.Tk()
+customtkinter.set_appearance_mode("light")
+customtkinter.set_default_color_theme("green")
+
+app = customtkinter.CTk()
 app.title("ChatAI")
 app.geometry("300x500")
+app.resizable(False, False)
+
+mainFrame = customtkinter.CTkFrame(app)
+mainFrame.pack(expand=True, fill="both")
 
 #input
-inputFrame = tk.Frame(app)
-inputFrame.pack(expand=True, fill="both")
+inputFrame = customtkinter.CTkFrame(mainFrame)
+inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-inputlabel = tk.Label(inputFrame, text="User", bg="#EAEFD3")
-inputlabel.pack(expand=True, fill="both")
+label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
+label.pack(fill="x", padx=10, pady=10)
+
+inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
+inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 #output
-outputFrame = tk.Frame(app)
-outputFrame.pack(expand=True, fill="both")
+outputFrame = customtkinter.CTkFrame(mainFrame)
+outputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-outputlabel = tk.Label(outputFrame, text="ChatAI", bg="#EAEFD3")
-outputlabel.pack(expand=True, fill="both")
+label = customtkinter.CTkLabel(outputFrame, text="ChatAI", anchor="w")
+label.pack(fill="x", padx=10, pady=10)
+
+outputlabel = customtkinter.CTkLabel(outputFrame, text="Output...", anchor="n", wraplength=250)
+outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 #controls
-controlsFrame = tk.Frame(app)
-controlsFrame.pack(expand=True, fill="both")
+controlsFrame = customtkinter.CTkFrame(mainFrame)
+controlsFrame.pack(padx=10, pady=10)
 
-startButton = tk.Button(controlsFrame, text="Start", bg="#B3C0A4", command=getAudio)
-startButton.pack(expand=True, fill="both", side="left")
+microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
-# stopButton = tk.Button(controlsFrame, text="Stop", bg="#505168")# , command=stopRec)
-# stopButton.pack(expand=True, fill="both", side="right")
-
-resetButton = tk.Button(controlsFrame, text="Reset", bg="#505168")# , command=stopRec)
-resetButton.pack(expand=True, fill="both", side="right")
+startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
+startButton.pack(ipady=10)
 
 app.mainloop() 
