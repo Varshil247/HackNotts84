@@ -44,10 +44,10 @@ def getGPTresp(text):
     def generate_response():
         global conversation_history
         load_dotenv()
-        typeWriter("The AI is Thinking . . .", 1, outputlabel)
+        typeWriter("The AI is Thinking...", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
         messages = conversation_history + [{"role": "user", "content": text}]
-        typeWriter("The AI is Thinking . . .", 1, outputlabel)
+        typeWriter("The AI is Thinking ...", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -106,7 +106,7 @@ def resetText():
 
 app = customtkinter.CTk()
 app.title("ChatAI")
-app.geometry("300x500")
+app.geometry("300x600")
 app.resizable(False, True)
 
 mainFrame = customtkinter.CTkFrame(app)
@@ -173,9 +173,11 @@ outputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 label = customtkinter.CTkLabel(outputFrame, text="ChatAI", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
-outputlabel = customtkinter.CTkLabel(outputFrame, text="", anchor="n", wraplength=250)
-outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
+scroll = customtkinter.CTkScrollableFrame(outputFrame)
+scroll.pack(expand=True, fill="both", padx=10, pady=10)
 
+outputlabel = customtkinter.CTkLabel(scroll, text="", anchor="n", wraplength=220)
+outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 
 
