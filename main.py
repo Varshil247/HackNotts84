@@ -106,8 +106,8 @@ def resetText():
 
 app = customtkinter.CTk()
 app.title("ChatAI")
-app.geometry("300x600")
-app.resizable(False, True)
+app.geometry("400x800")
+app.resizable(False, False)
 
 mainFrame = customtkinter.CTkFrame(app)
 mainFrame.pack(expand=True, fill="both")
@@ -122,7 +122,7 @@ customtkinter.set_default_color_theme("green")
 infoFrame = customtkinter.CTkFrame(mainFrame)
 infoFrame.pack(fill="x", padx=10, pady=10)
 
-combobox = customtkinter.CTkComboBox(infoFrame, values=["Dark","Light"], command=combobox_callback, state="readonly")
+combobox = customtkinter.CTkComboBox(infoFrame, values=["Dark","Light"], command=combobox_callback, state="readonly", font=("arial", 18))
 combobox.pack(expand=True, fill="x", side="left")
 combobox.set("Dark")
 
@@ -141,10 +141,10 @@ infoButton.pack(side="right")
 inputFrame = customtkinter.CTkFrame(mainFrame)
 inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
+label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w", font=("arial", 18))
 label.pack(fill="x", padx=10, pady=10)
 
-inputlabel = customtkinter.CTkLabel(inputFrame, text="", anchor="n", wraplength=250)
+inputlabel = customtkinter.CTkLabel(inputFrame, text="", anchor="n", wraplength=250, font=("arial", 18))
 inputlabel.configure(height =20)
 inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
@@ -155,7 +155,7 @@ inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 textFrame = customtkinter.CTkFrame(mainFrame)
 textFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-textInput = customtkinter.CTkEntry(textFrame, placeholder_text="Ask your question here..")
+textInput = customtkinter.CTkEntry(textFrame, placeholder_text="Ask your question here...", font=("arial", 18))
 textInput.configure(width=200)
 textInput.pack(expand=True, fill="both",side="left", pady=5,padx=5)
 
@@ -170,13 +170,13 @@ arrowButton.pack( fill="y",side="right",pady=5,padx=5)
 outputFrame = customtkinter.CTkFrame(mainFrame)
 outputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-label = customtkinter.CTkLabel(outputFrame, text="ChatAI", anchor="w")
+label = customtkinter.CTkLabel(outputFrame, text="ChatAI", anchor="w", font=("arial", 18))
 label.pack(fill="x", padx=10, pady=10)
 
 scroll = customtkinter.CTkScrollableFrame(outputFrame)
 scroll.pack(expand=True, fill="both", padx=10, pady=10)
 
-outputlabel = customtkinter.CTkLabel(scroll, text="", anchor="n", wraplength=220)
+outputlabel = customtkinter.CTkLabel(scroll, text="", anchor="n", wraplength=220, font=("arial", 18))
 outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 
