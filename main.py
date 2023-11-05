@@ -24,7 +24,7 @@ def record_and_process_audio():
     try:
         with sr.Microphone() as source:
             print("Adjusting noise ")
-            recognizer.adjust_for_ambient_noise(source, duration=1)
+            recognizer.adjust_for_ambient_noise(source, duration=0.5)
             print("Recording ")
             recorded_audio = recognizer.listen(source)
             print("Recognizing the text")
@@ -43,13 +43,15 @@ def record_and_process_audio():
 def getGPTresp(text):
     def generate_response():
         load_dotenv()
+        typeWriter("The AI is Thinking . . .", 1, outputlabel)
         openai.api_key = os.getenv('GPT')
         messages = [{"role": "user", "content": text + "in no more than 50 words"}]
+        typeWriter("The AI is Thinking . . .", 1, outputlabel)
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                max_tokens=50  # This limits the response length
+                #max_tokens=50  # This limits the response length
             )
             response_text = completion.choices[0].message['content']
             print(f"ChatAI: {response_text}")
@@ -105,6 +107,10 @@ label.pack(fill="x", padx=10, pady=10)
 inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
 inputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
+textInput = tk.Entry(inputFrame, text="input", bg="#EAEFD1")
+textInput.insert(0, "Enter your question here")
+textInput.pack(expand=True, fill="both")
+
 #output
 outputFrame = customtkinter.CTkFrame(mainFrame)
 outputFrame.pack(expand=True, fill="both", padx=10, pady=10)
@@ -123,5 +129,11 @@ microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
 startButton.pack(ipady=10)
+
+arrowButton = tk.Button(controlsFrame, text=">", bg="#B3C0A4", command=lambda: getGPTresp(textInput.get()))
+arrowButton.pack(expand=True, fill="both", side="left")
+
+resetButton = tk.Button(controlsFrame, text="Reset", bg="#505168")# , command=stopRec)
+resetButton.pack(expand=True, fill="both", side="right")
 
 app.mainloop() 
