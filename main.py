@@ -109,13 +109,13 @@ customtkinter.set_default_color_theme("green")
 inputFrame = customtkinter.CTkFrame(mainFrame)
 inputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
-combobox = customtkinter.CTkComboBox(master=app,values=["dark","light"], command=combobox_callback)
+combobox = customtkinter.CTkComboBox(master=app,values=["Dark","Light"], command=combobox_callback)
 combobox.pack(expand=False, fill="both",padx=5, pady=5)
 
 label = customtkinter.CTkLabel(inputFrame, text="User", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
-inputlabel = customtkinter.CTkLabel(inputFrame, text="Input...", anchor="n", wraplength=250)
+inputlabel = customtkinter.CTkLabel(inputFrame, text="", anchor="n", wraplength=250)
 inputlabel.configure(height =20)
 inputlabel.pack(expand=True, fill="both", padx=10, pady=10,)
 
@@ -130,7 +130,9 @@ textInput = customtkinter.CTkEntry(textFrame, placeholder_text="Ask your questio
 textInput.configure(width=200)
 textInput.pack(expand=True, fill="both",side="left", pady=5,padx=5)
 
-arrowButton = customtkinter.CTkButton(textFrame, text="=>", command=lambda: getGPTresp(textInput.get()))
+enter = customtkinter.CTkImage(Image.open(r"enter.png"))
+
+arrowButton = customtkinter.CTkButton(textFrame, text="", image=enter, command=lambda: getGPTresp(textInput.get()))
 #arrowButton.configure(height=50, width=20)
 arrowButton.pack( fill="y",side="right",pady=5,padx=5)
 
@@ -141,24 +143,22 @@ outputFrame.pack(expand=True, fill="both", padx=10, pady=10)
 label = customtkinter.CTkLabel(outputFrame, text="ChatAI", anchor="w")
 label.pack(fill="x", padx=10, pady=10)
 
-outputlabel = customtkinter.CTkLabel(outputFrame, text="Output...", anchor="n", wraplength=250)
+outputlabel = customtkinter.CTkLabel(outputFrame, text="", anchor="n", wraplength=250)
 outputlabel.pack(expand=True, fill="both", padx=10, pady=10)
 
 #controls
 controlsFrame = customtkinter.CTkFrame(mainFrame)
-controlsFrame.pack(padx=10, pady=10)
+controlsFrame.pack(expand=True, fill="both", padx=10, pady=10)
 
 microphone = customtkinter.CTkImage(Image.open(r"microphone.png"))
 
 startButton = customtkinter.CTkButton(controlsFrame, text="", image=microphone, command=getAudio)
-startButton.configure(height=80, width=120)  # Make the microphone button larger
-startButton.pack(side="left", padx=5)
+startButton.pack(expand=True, fill="both", side="left", padx=5)
 
+reset = customtkinter.CTkImage(Image.open(r"reset.png"))
 
-
-resetButton = customtkinter.CTkButton(controlsFrame, text="RESET")  # Use app.quit to properly exit the application
-resetButton.configure(height=80, width=60)
-resetButton.pack(side="right", padx=5)
+resetButton = customtkinter.CTkButton(controlsFrame, text="", image=reset)  # Use app.quit to properly exit the application
+resetButton.pack(expand=True, fill="both", side="right", padx=5)
 
 
 app.mainloop() 
